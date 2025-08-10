@@ -24,6 +24,9 @@ func configDir() string {
 
 func configPath() string { return filepath.Join(configDir(), "config.toml") }
 
+// Path returns the absolute path to the configuration file (may be relative if home directory lookup failed).
+func Path() string { return configPath() }
+
 // Load reads configuration from config.toml. It returns an empty Config and the error
 // if the file cannot be read (callers commonly ignore the error to allow empty defaults).
 func Load() (*Config, error) {

@@ -40,8 +40,18 @@ var configShowCmd = &cobra.Command{
 	},
 }
 
+var configPathCmd = &cobra.Command{
+	Use:   "path",
+	Short: "Print config file path",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		fmt.Println(config.Path())
+		return nil
+	},
+}
+
 func init() {
 	configCmd.AddCommand(configSetCmd)
 	configCmd.AddCommand(configShowCmd)
+	configCmd.AddCommand(configPathCmd)
 	configSetCmd.Flags().StringVar(&cfgAPI, "api", "", "API base URL")
 }
