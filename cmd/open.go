@@ -7,8 +7,8 @@ import (
 	"runtime"
 	"strconv"
 
-	"github.com/amaterasu/markdex/cli/internal/api"
-	"github.com/amaterasu/markdex/cli/internal/config"
+	"github.com/amaterasu/markdex-cli/internal/api"
+	"github.com/amaterasu/markdex-cli/internal/config"
 	"github.com/spf13/cobra"
 )
 

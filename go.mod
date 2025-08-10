@@ -1,4 +1,4 @@
-module github.com/amaterasu/markdex/cli
+module github.com/amaterasu/markdex-cli
 
 go 1.22
 

@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/amaterasu/markdex/cli/internal/config"
+	"github.com/amaterasu/markdex-cli/internal/config"
 	"github.com/spf13/cobra"
 )
 

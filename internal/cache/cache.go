@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/amaterasu/markdex/cli/internal/api"
+	"github.com/amaterasu/markdex-cli/internal/api"
 )
 
 type diskCache struct {
