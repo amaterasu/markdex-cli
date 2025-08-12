@@ -83,7 +83,8 @@ var pickCmd = &cobra.Command{
 			lines[i] = fmt.Sprintf("%d\t%s\t%s\t%s\t%s\t%s", i, sanitizeTabs(b.Title), b.URL, tags, host, sanitizeTabs(b.Description))
 		}
 
-		fzfArgs := []string{"--with-nth", "2,5,4", "--delimiter", "\t", "--ansi", "--prompt", "markdex> "}
+		// Show only title (col 2) and tags (col 4) in the interactive list
+		fzfArgs := []string{"--with-nth", "2,4", "--delimiter", "\t", "--ansi", "--prompt", "markdex> "}
 		if pickFlagMulti {
 			fzfArgs = append(fzfArgs, "--multi")
 		}
