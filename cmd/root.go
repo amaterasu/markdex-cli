@@ -13,6 +13,13 @@ var (
 	apiBase string
 )
 
+// These are set via -ldflags at build time.
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
 var rootCmd = &cobra.Command{
 	Use:   "markdex",
 	Short: "Markdex CLI - interact with your bookmarks",
@@ -32,6 +39,9 @@ func init() {
 	//rootCmd.AddCommand(openCmd)
 	rootCmd.AddCommand(configCmd)
 	rootCmd.AddCommand(pickCmd)
+	rootCmd.AddCommand(&cobra.Command{Use: "version", Short: "Show version info", Run: func(cmd *cobra.Command, args []string) {
+		fmt.Printf("markdex %s (commit %s, built %s)\n", version, commit, date)
+	}})
 }
 
 func infof(format string, a ...any) { color.New(color.FgHiBlack).Printf(format+"\n", a...) }
