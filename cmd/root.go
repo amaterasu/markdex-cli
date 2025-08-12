@@ -29,7 +29,7 @@ func Execute() {
 func init() {
 	rootCmd.PersistentFlags().StringVar(&apiBase, "api", "", "API base URL (overrides config)")
 	rootCmd.AddCommand(listCmd)
-	rootCmd.AddCommand(openCmd)
+	//rootCmd.AddCommand(openCmd)
 	rootCmd.AddCommand(configCmd)
 	rootCmd.AddCommand(pickCmd)
 }

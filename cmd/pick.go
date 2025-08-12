@@ -16,6 +16,7 @@ import (
 	"github.com/amaterasu/markdex-cli/internal/api"
 	"github.com/amaterasu/markdex-cli/internal/cache"
 	"github.com/amaterasu/markdex-cli/internal/config"
+	"github.com/amaterasu/markdex-cli/internal/util"
 )
 
 var (
@@ -141,7 +142,7 @@ var pickCmd = &cobra.Command{
 
 		// open each
 		for _, si := range selected {
-			_ = openBrowser(items[si].URL)
+			_ = util.OpenBrowser(items[si].URL)
 		}
 		return nil
 	},
