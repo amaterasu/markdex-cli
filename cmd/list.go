@@ -72,8 +72,12 @@ func output(items []api.Bookmark, asJSON bool) error {
 		enc.SetIndent("", "  ")
 		return enc.Encode(items)
 	}
-	for i, b := range items {
-		fmt.Printf("%3d  %-40s  %s\n", i+1, truncate(b.Title, 40), b.URL)
+	for _, b := range items {
+
+		r := []rune(b.Hash)
+		dada := string(r[:5])
+
+		fmt.Printf("%s  %-47s %s\n", dada, truncate(b.Title, 40), b.Tags)
 	}
 	return nil
 }

@@ -16,6 +16,7 @@ type Bookmark struct {
 	Description string   `json:"description,omitempty"`
 	Tags        []string `json:"tags,omitempty"`
 	Section     string   `json:"section,omitempty"`
+	Hash        string   `json:"hash,omitempty"`
 }
 
 type apiResponse struct {
