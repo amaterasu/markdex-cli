@@ -31,7 +31,7 @@ var (
 var pickCmd = &cobra.Command{
 	Use:   "pick [initial-query]",
 	Short: "Fuzzy-pick bookmarks via fzf",
-	Long:  "Loads bookmarks (optionally filtered) and invokes external 'fzf' for fuzzy selection. Enter opens, --multi allows multiple selection. An optional initial-query argument seeds the fuzzy filter (client-side only).",
+	Long:  "Loads bookmarks (optionally filtered) and invokes external 'fzf' for fuzzy selection. Enter opens, --multi allows multiple selection. Ctrl-Y copies the hash of the highlighted entry. An optional initial-query argument seeds the fuzzy filter (client-side only).",
 	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, _ := config.Load()
@@ -103,6 +103,8 @@ var pickCmd = &cobra.Command{
 		}
 		preview := "echo TITLE: {3}; echo TAGS: {4}; echo HASH: {2}; echo; echo DESCRIPTION:; echo {5}"
 		fzfArgs = append(fzfArgs, "--preview", preview)
+		// Key binding: Ctrl-Y copies hash (column 2) to clipboard (macOS pbcopy). Abort to exit without opening.
+		fzfArgs = append(fzfArgs, "--bind", "ctrl-y:execute-silent(echo -n {2} | pbcopy)+abort")
 		cmdFzf := exec.Command(fzfPath, fzfArgs...)
 		stdin, err := cmdFzf.StdinPipe()
 		if err != nil {
