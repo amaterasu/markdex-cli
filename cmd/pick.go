@@ -84,8 +84,12 @@ var pickCmd = &cobra.Command{
 				shortHash = shortHash[:7]
 			}
 			tags := strings.Join(b.Tags, ",")
-			// Columns: index, shortHash, title, tags
-			lines[i] = fmt.Sprintf("%d\t%s\t%-40s\t%s", i, shortHash, sanitizeTabs(truncate(b.Title, 40)), tags)
+			desc := b.Description
+			if len(desc) > 300 { // keep preview concise
+				desc = desc[:297] + "..."
+			}
+			// Columns: index, shortHash, title, tags, description
+			lines[i] = fmt.Sprintf("%d\t%s\t%-40s\t%s\t%s", i, shortHash, sanitizeTabs(truncate(b.Title, 40)), tags, sanitizeTabs(desc))
 		}
 
 		// Show short hash, title, tags (cols 2,3,4)
@@ -93,7 +97,7 @@ var pickCmd = &cobra.Command{
 		if pickFlagMulti {
 			fzfArgs = append(fzfArgs, "--multi")
 		}
-		preview := "echo TITLE: {3}; echo TAGS: {4}; echo HASH: {2}"
+		preview := "echo TITLE: {3}; echo TAGS: {4}; echo HASH: {2}; echo; echo DESCRIPTION:; echo {5}"
 		fzfArgs = append(fzfArgs, "--preview", preview)
 		cmdFzf := exec.Command(fzfPath, fzfArgs...)
 		stdin, err := cmdFzf.StdinPipe()
@@ -163,16 +167,7 @@ func init() {
 
 func sanitizeTabs(s string) string { return strings.ReplaceAll(s, "\t", " ") }
 
-func hostFromURL(u string) string {
-	if u == "" {
-		return ""
-	}
-	pp, err := url.Parse(u)
-	if err != nil {
-		return ""
-	}
-	return pp.Host
-}
+// hostFromURL removed (unused)
 
 func copyToClipboard(text string) error {
 	switch runtime.GOOS {
