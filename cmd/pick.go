@@ -29,9 +29,10 @@ var (
 )
 
 var pickCmd = &cobra.Command{
-	Use:   "pick",
+	Use:   "pick [initial-query]",
 	Short: "Fuzzy-pick bookmarks via fzf",
-	Long:  "Loads bookmarks (optionally filtered) and invokes external 'fzf' for fuzzy selection. Enter opens, --multi allows multiple selection.",
+	Long:  "Loads bookmarks (optionally filtered) and invokes external 'fzf' for fuzzy selection. Enter opens, --multi allows multiple selection. An optional initial-query argument seeds the fuzzy filter (client-side only).",
+	Args:  cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, _ := config.Load()
 		base := firstNonEmpty(apiBase, cfg.APIBase)
@@ -94,6 +95,9 @@ var pickCmd = &cobra.Command{
 
 		// Show short hash, title, tags (cols 2,3,4)
 		fzfArgs := []string{"--with-nth", "2,3,4", "--delimiter", "\t", "--ansi", "--prompt", "markdex> "}
+		if len(args) == 1 && args[0] != "" {
+			fzfArgs = append(fzfArgs, "--query", args[0])
+		}
 		if pickFlagMulti {
 			fzfArgs = append(fzfArgs, "--multi")
 		}
