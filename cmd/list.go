@@ -72,10 +72,14 @@ func output(items []api.Bookmark, asJSON bool) error {
 		enc.SetIndent("", "  ")
 		return enc.Encode(items)
 	}
+	if len(items) == 0 {
+		fmt.Println("No matching entries found.")
+		return nil
+	}
 	for _, b := range items {
 
 		r := []rune(b.Hash)
-		dada := string(r[:5])
+		dada := string(r[:7])
 
 		fmt.Printf("%s  %-47s %s\n", dada, truncate(b.Title, 40), b.Tags)
 	}

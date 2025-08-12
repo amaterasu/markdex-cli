@@ -48,18 +48,21 @@ func FetchBookmarks(base string, q url.Values) ([]Bookmark, error) {
 	if err != nil {
 		return nil, err
 	}
-	// attempt decode flexible formats
+	// attempt decode flexible formats (either a raw array or an object with items field)
 	var arr []Bookmark
-	if err := json.Unmarshal(b, &arr); err == nil && len(arr) > 0 {
+	if err := json.Unmarshal(b, &arr); err == nil {
+		// Successfully decoded slice (could be empty)
+		if arr == nil { // normalize nil slice to empty
+			arr = []Bookmark{}
+		}
 		return arr, nil
 	}
 	var ar apiResponse
-	if err := json.Unmarshal(b, &ar); err == nil && len(ar.Items) > 0 {
+	if err := json.Unmarshal(b, &ar); err == nil {
+		if ar.Items == nil {
+			return []Bookmark{}, nil
+		}
 		return ar.Items, nil
-	}
-	// empty acceptable
-	if string(b) == "[]" {
-		return []Bookmark{}, nil
 	}
 	return nil, errors.New("unexpected response format")
 }
