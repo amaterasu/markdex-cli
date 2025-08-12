@@ -79,17 +79,21 @@ var pickCmd = &cobra.Command{
 
 		lines := make([]string, len(items))
 		for i, b := range items {
+			shortHash := b.Hash
+			if len(shortHash) > 7 {
+				shortHash = shortHash[:7]
+			}
 			tags := strings.Join(b.Tags, ",")
-			host := hostFromURL(b.URL)
-			lines[i] = fmt.Sprintf("%d\t%s\t%s\t%s\t%s\t%s", i, sanitizeTabs(b.Title), b.URL, tags, host, sanitizeTabs(b.Description))
+			// Columns: index, shortHash, title, tags
+			lines[i] = fmt.Sprintf("%d\t%s\t%-40s\t%s", i, shortHash, sanitizeTabs(truncate(b.Title, 40)), tags)
 		}
 
-		// Show only title (col 2) and tags (col 4) in the interactive list
-		fzfArgs := []string{"--with-nth", "2,4", "--delimiter", "\t", "--ansi", "--prompt", "markdex> "}
+		// Show short hash, title, tags (cols 2,3,4)
+		fzfArgs := []string{"--with-nth", "2,3,4", "--delimiter", "\t", "--ansi", "--prompt", "markdex> "}
 		if pickFlagMulti {
 			fzfArgs = append(fzfArgs, "--multi")
 		}
-		preview := "echo URL: {3}; echo HOST: {5}; echo TAGS: {4}; echo; echo {6}"
+		preview := "echo TITLE: {3}; echo TAGS: {4}; echo HASH: {2}"
 		fzfArgs = append(fzfArgs, "--preview", preview)
 		cmdFzf := exec.Command(fzfPath, fzfArgs...)
 		stdin, err := cmdFzf.StdinPipe()
