@@ -77,12 +77,9 @@ func output(items []api.Bookmark, asJSON bool) error {
 		return nil
 	}
 	for _, b := range items {
-
-		r := []rune(b.Hash)
-		dada := string(r[:7])
-
-		fmt.Printf("%s  %-47s %s\n", dada, truncate(b.Title, 40), b.Tags)
+		fmt.Printf("%s  %-47s %s\n", b.Hash[:7], truncate(b.Title, 40), b.Tags)
 	}
+
 	return nil
 }
 

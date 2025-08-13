@@ -47,8 +47,8 @@ var searchCmd = &cobra.Command{
 			fmt.Println("No matching entries found.")
 			return nil
 		}
-		for i, b := range items {
-			fmt.Printf("%3d  %-40s  %s\n", i+1, truncate(b.Title, 40), b.URL)
+		for _, b := range items {
+			fmt.Printf("%s  %-40s  %s\n", b.Hash[:7], truncate(b.Title, 40), b.Tags)
 		}
 		return nil
 	},
