@@ -19,6 +19,7 @@ var openHashCmd = &cobra.Command{
 	Short: "Open a bookmark by its hash prefix (first 3+ chars)",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
+
 		prefix := strings.ToLower(args[0])
 		if len(prefix) < 3 {
 			return errors.New("hash prefix must be at least 3 characters")
@@ -65,6 +66,12 @@ var openHashCmd = &cobra.Command{
 			}
 			return fmt.Errorf("ambiguous hash prefix %s, matches:\n%s", prefix, strings.Join(lines, "\n"))
 		}
+
+		values := url.Values{}
+		values.Set("hash", matches[0].Hash)
+		values.Set("user_id", "alex.straub")
+		api.UseBookmark(base, values)
+
 		return util.OpenBrowser(matches[0].URL)
 	},
 }

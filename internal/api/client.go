@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -19,12 +20,69 @@ type Bookmark struct {
 	Hash        string   `json:"hash,omitempty"`
 }
 
+type Usage struct {
+	Hash       string `json:"hash"`
+	UserId     string `json:"user_id"`
+	Usage      int    `json:"usage"`
+	TotalUsage int    `json:"total_usage"`
+}
+
 type apiResponse struct {
 	Items []Bookmark `json:"items"`
 	Total int        `json:"total"`
 }
 
+type UsageRequest struct {
+	Hash   string `json:"hash"`
+	UserId string `json:"user_id"`
+}
+
 var httpClient = &http.Client{Timeout: 12 * time.Second}
+
+func UseBookmark(base string, q url.Values) (Usage, error) {
+
+	endpoint := base + "/api/usage"
+
+	reqBody := UsageRequest{
+		Hash:   q.Get("hash"),
+		UserId: q.Get("user_id"),
+	}
+
+	jsonBody, err := json.Marshal(reqBody)
+	if err != nil {
+		return Usage{}, err
+	}
+
+	req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return Usage{}, err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
+
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return Usage{}, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		return Usage{}, fmt.Errorf("http %d", resp.StatusCode)
+	}
+
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return Usage{}, err
+	}
+
+	var usage Usage
+	if err := json.Unmarshal(b, &usage); err != nil {
+		return Usage{}, fmt.Errorf("failed to decode response: %w", err)
+	}
+
+	return usage, nil
+}
 
 func FetchBookmarks(base string, q url.Values) ([]Bookmark, error) {
 	endpoint := base + "/api/bookmarks"
