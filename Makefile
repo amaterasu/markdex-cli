@@ -15,8 +15,7 @@ build:
 	GOFLAGS="-trimpath" go build -ldflags "$(LDFLAGS)" -o bin/$(APP_NAME) .
 
 install:
-	@mkdir -p $(GOBIN)
-	GOFLAGS="-trimpath" go build -ldflags "$(LDFLAGS)" -o $(GOBIN)/$(APP_NAME) .
+	GOFLAGS="-trimpath" go install -ldflags "$(LDFLAGS)" .
 
 run: build
 	./bin/$(APP_NAME) $(ARGS)
