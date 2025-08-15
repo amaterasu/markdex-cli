@@ -159,12 +159,24 @@ var pickCmd = &cobra.Command{
 		}
 
 		if pickFlagCopy {
-			// copy first URL only
+			// Track usage for the first selected entry, then copy its URL
+			if h := strings.TrimSpace(items[selected[0]].Hash); h != "" {
+				vals := url.Values{}
+				vals.Set("hash", h)
+				vals.Set("user_id", cfg.UserID)
+				_, _ = api.UseBookmark(base, vals)
+			}
 			return copyToClipboard(items[selected[0]].URL)
 		}
 
-		// open each
+		// track usage and open each
 		for _, si := range selected {
+			if h := strings.TrimSpace(items[si].Hash); h != "" {
+				vals := url.Values{}
+				vals.Set("hash", h)
+				vals.Set("user_id", cfg.UserID)
+				_, _ = api.UseBookmark(base, vals)
+			}
 			_ = util.OpenBrowser(items[si].URL)
 		}
 		return nil
