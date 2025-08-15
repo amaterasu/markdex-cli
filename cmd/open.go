@@ -69,7 +69,7 @@ var openHashCmd = &cobra.Command{
 
 		values := url.Values{}
 		values.Set("hash", matches[0].Hash)
-		values.Set("user_id", "alex.straub")
+		values.Set("user_id", cfg.UserID)
 		api.UseBookmark(base, values)
 
 		return util.OpenBrowser(matches[0].URL)

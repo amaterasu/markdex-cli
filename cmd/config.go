@@ -8,6 +8,7 @@ import (
 )
 
 var cfgAPI string
+var cfgUser string
 
 var configCmd = &cobra.Command{
 	Use:   "config",
@@ -21,6 +22,9 @@ var configSetCmd = &cobra.Command{
 		c, _ := config.Load()
 		if cfgAPI != "" {
 			c.APIBase = cfgAPI
+		}
+		if cfgUser != "" {
+			c.UserID = cfgUser
 		}
 		if err := config.Save(c); err != nil {
 			return err
@@ -36,6 +40,11 @@ var configShowCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c, _ := config.Load()
 		fmt.Printf("apiBase: %s\n", c.APIBase)
+		u := c.UserID
+		if u == "" {
+			u = "default"
+		}
+		fmt.Printf("userId: %s\n", u)
 		return nil
 	},
 }
@@ -54,4 +63,5 @@ func init() {
 	configCmd.AddCommand(configShowCmd)
 	configCmd.AddCommand(configPathCmd)
 	configSetCmd.Flags().StringVar(&cfgAPI, "api", "", "API base URL")
+	configSetCmd.Flags().StringVar(&cfgUser, "user", "", "Default user id (e.g., workspace or profile)")
 }
