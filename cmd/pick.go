@@ -142,11 +142,20 @@ var pickCmd = &cobra.Command{
 				selected = append(selected, idx)
 			}
 		}
-		if err := cmdFzf.Wait(); err != nil {
-			return err
-		}
+		err = cmdFzf.Wait()
+		// If nothing selected, treat as normal cancel regardless of exit code.
 		if len(selected) == 0 {
 			return nil
+		}
+		// If there was an error, ignore common fzf cancel/no-match codes (1, 130), otherwise return it.
+		if err != nil {
+			if ee, ok := err.(*exec.ExitError); ok {
+				code := ee.ExitCode()
+				if code == 1 || code == 130 { // 1=no match, 130=interrupted/ESC
+					return nil
+				}
+			}
+			return err
 		}
 
 		if pickFlagCopy {
