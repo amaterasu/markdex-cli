@@ -93,14 +93,15 @@ var pickCmd = &cobra.Command{
 			lines[i] = fmt.Sprintf("%d\t%s\t%-40s\t%s\t%s", i, shortHash, sanitizeTabs(truncate(b.Title, 40)), tags, sanitizeTabs(desc))
 		}
 
-		// Show short hash, title, tags (cols 2,3,4)
-		fzfArgs := []string{"--with-nth", "2,3,4", "--delimiter", "\t", "--ansi", "--prompt", "markdex> "}
+		// Show only short hash and title (cols 2,3)
+		fzfArgs := []string{"--with-nth", "2,3", "--delimiter", "\t", "--ansi", "--prompt", "markdex> "}
 		if len(args) == 1 && args[0] != "" {
 			fzfArgs = append(fzfArgs, "--query", args[0])
 		}
 		if pickFlagMulti {
 			fzfArgs = append(fzfArgs, "--multi")
 		}
+		// Preview includes tags (column 4) while list shows only hash+title
 		preview := "echo TITLE: {3}; echo TAGS: {4}; echo HASH: {2}; echo; echo DESCRIPTION:; echo {5}"
 		fzfArgs = append(fzfArgs, "--preview", preview)
 		// Key binding: Ctrl-Y copies hash (column 2) to clipboard (macOS pbcopy). Abort to exit without opening.
