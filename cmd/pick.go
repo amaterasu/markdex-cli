@@ -85,10 +85,8 @@ var pickCmd = &cobra.Command{
 				shortHash = shortHash[:7]
 			}
 			tags := strings.Join(b.Tags, ",")
+			// Don't hard-truncate description; rely on preview wrapping for readability.
 			desc := b.Description
-			if len(desc) > 300 { // keep preview concise
-				desc = desc[:297] + "..."
-			}
 			// Columns: index, shortHash, title, tags, description
 			lines[i] = fmt.Sprintf("%d\t%s\t%-40s\t%s\t%s", i, shortHash, sanitizeTabs(truncate(b.Title, 40)), tags, sanitizeTabs(desc))
 		}
@@ -101,8 +99,8 @@ var pickCmd = &cobra.Command{
 		if pickFlagMulti {
 			fzfArgs = append(fzfArgs, "--multi")
 		}
-		// Preview includes tags (column 4) while list shows only hash+title
-		preview := "echo TITLE: {3}; echo TAGS: {4}; echo HASH: {2}; echo; echo DESCRIPTION:; echo {5}"
+		// Preview includes tags and wraps description to available preview width (if 'fold' exists)
+		preview := "echo TITLE: {3}; echo TAGS: {4}; echo HASH: {2}; echo; echo DESCRIPTION:; (command -v fold >/dev/null 2>&1 && echo {5} | fold -s -w ${FZF_PREVIEW_COLUMNS:-100}) || echo {5}"
 		fzfArgs = append(fzfArgs, "--preview", preview)
 		// Key binding: Ctrl-Y copies hash (column 2) to clipboard (macOS pbcopy). Abort to exit without opening.
 		fzfArgs = append(fzfArgs, "--bind", "ctrl-y:execute-silent(echo -n {2} | pbcopy)+abort")
