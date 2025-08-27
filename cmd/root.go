@@ -39,6 +39,7 @@ func init() {
 	//rootCmd.AddCommand(openCmd)
 	rootCmd.AddCommand(configCmd)
 	rootCmd.AddCommand(pickCmd)
+	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(&cobra.Command{Use: "version", Short: "Show version info", Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("markdex %s (commit %s, built %s)\n", version, commit, date)
 	}})

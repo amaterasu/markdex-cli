@@ -44,6 +44,15 @@ Fuzzy pick (requires fzf):
 Open by hash prefix:
    markdex open-hash abc
 
+Add bookmark (AI enrichment):
+   markdex add --ai --source-file inbox.md https://example.com/some/page
+
+Add bookmark manually with fields:
+   markdex add -T "Some Title" -t web,reference -d "Some Description" -f inbox.md https://example.com/ref
+
+Output created bookmark JSON:
+   markdex add --ai --json https://example.com/interesting
+
 JSON output:
    markdex list --json | jq '.[] | {title, url}'
 
