@@ -59,6 +59,7 @@ var addCmd = &cobra.Command{
 			enc.SetIndent("", "  ")
 			return enc.Encode(bk)
 		}
+
 		// Invalidate local cache so next list/pick reflects new bookmark
 		c := cache.New()
 		_ = os.Remove(c.Path)
