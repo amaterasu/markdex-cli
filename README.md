@@ -33,10 +33,15 @@ Show config path:
    markdex config path
 List bookmarks:
    markdex list
-Search:
+   markdex ls
+Search (now supports positional argument or -s flag):
+   markdex list rust
+   markdex ls rust
    markdex list -s rust
+   markdex ls -s rust
 Filter by tag:
    markdex list -t programming
+   markdex ls -t programming
 Open by index:
    markdex open 3
 Fuzzy pick (requires fzf):

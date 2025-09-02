@@ -23,9 +23,14 @@ var (
 )
 
 var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List bookmarks",
+	Use:   "list [search]",
+	Short: "List bookmarks (optionally filter by search query)",
+	Long:  "List bookmarks. Optionally provide a search query as a positional argument, e.g. 'markdex list rust'. You can also use the -s flag for search, or -t for tag filtering.",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		// If a positional argument is provided, treat it as a search query
+		if len(args) > 0 && flagSearch == "" {
+			flagSearch = strings.Join(args, " ")
+		}
 		cfg, _ := config.Load()
 		base := firstNonEmpty(apiBase, cfg.APIBase)
 		if base == "" {
